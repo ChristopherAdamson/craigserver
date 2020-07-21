@@ -2,13 +2,13 @@ const { default: BaseController } = require("../utils/BaseController");
 const { carsService } = require("../services/CarsService");
 
 
-class CarsController extends BaseController {
+export class CarsController extends BaseController {
   constructor() {
     super("api/cars")
     this.router
       .get("", this.getAll)
       .get("/:id", this.getOne)
-      .post("/:id", this.create)
+      .post("", this.create)
       .delete("/:id", this.delete)
       .put("/:id", this.edit)
   }
@@ -34,6 +34,12 @@ class CarsController extends BaseController {
     try {
       let car = await carsService.delete(req.params.id)
       res.send({ message: "Car Deleted" })
+    } catch (error) { next(error) }
+  }
+  async edit(req, res, next) {
+    try {
+      let updatedCar = await carsService.edit(req.params.id, req.body)
+      res.send({ data: updatedCar, message: "Car Edited!" })
     } catch (error) { next(error) }
   }
 }
